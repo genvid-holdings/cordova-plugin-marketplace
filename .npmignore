@@ -1,0 +1,9 @@
+.*
+/tests/
+/sdk-patch/
+/demo/
+/eos-sdk/
+/ios-build.json
+*.tgz
+*.cer
+*.p12

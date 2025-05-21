@@ -1,0 +1,14 @@
+{
+  "name": "cordova-plugin-template-tests",
+  "version": "0.0.1",
+  "description": "",
+  "cordova": {
+    "id": "cordova-plugin-template-tests",
+    "platforms": [ ]
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "",
+  "license": "Apache 2.0"
+}

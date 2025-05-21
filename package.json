@@ -1,0 +1,60 @@
+{
+  "name": "cordova-plugin-template",
+  "version": "0.0.1",
+  "description": "Cordova Template Plugin",
+  "types": "./types/index.d.ts",
+  "cordova": {
+    "id": "cordova-plugin-template",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": "bitbucket:genvidtech/cordova-plugin-template",
+  "bugs": "https://bitbucket.org/genvidtech/cordova-plugin-template/issues",
+  "keywords": [
+    "cordova",
+    "device",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "package": "npm pack && (cd tests && npm pack --pack-destination ..)",
+    "clean:demo": "git clean -fxd ./demo",
+    "setup:demo:cordova": "cd demo && npm init --workspaces=false -y && npm --prefix . install -D cordova",
+    "setup:demo": "npm run setup:demo:cordova && npm run setup:demo:config",
+    "setup:demo:android": "cd demo && npx --prefix . cordova platform add android",
+    "build:demo:android": "cd demo && npx --prefix . cordova build android",
+    "build:demo:android:release": "cd demo && npx --prefix . cordova build android --release -- --packageType=bundle",
+    "run:android": "cd demo && npx --prefix . cordova run android",
+    "setup:demo:ios": "cd demo && npm --prefix . install -D ios-deploy xcode && npx --prefix . cordova platform add ios",
+    "build:demo:ios": "cd demo && npx --prefix . cordova build ios --device",
+    "build:demo:ios:release": "cd demo && npx --prefix . cordova build ios --device --release",
+    "run:ios": "cd demo && npx --prefix . cordova run ios --device",
+    "refresh:common": "npm run package && npm run clean:demo && npm run setup:demo",
+    "refresh:android": "npm run refresh:common && npm run setup:demo:android && npm run build:demo:android",
+    "refresh:ios": "npm run refresh:common && npm run setup:demo:ios && npm run build:demo:ios",
+    "restart:android": "npm run refresh:common && npm run setup:demo:android && npm run run:android",
+    "restart:ios": "npm run refresh:common && npm run setup:demo:ios && npm run run:ios",
+  },
+  "author": "Genvid Technologies, LLC",
+  "license": "MIT-0",
+  "engines": {
+    "cordovaDependencies": {
+      "3.0.0": {
+        "cordova-android": ">=7.0.0"
+      },
+      "4.0.0": {
+        "cordova": ">100"
+      }
+    }
+  },
+  "devDependencies": {
+    "@cordova/eslint-config": "^3.0.0",
+    "eslint-plugin-promise": "^7.2.1",
+    "shx": "^0.4.0"
+  }
+}
