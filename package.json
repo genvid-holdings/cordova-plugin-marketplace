@@ -1,17 +1,17 @@
 {
-  "name": "cordova-plugin-template",
-  "version": "0.0.1",
-  "description": "Cordova Template Plugin",
+  "name": "cordova-plugin-marketplace",
+  "version": "1.0.0",
+  "description": "Cordova Marketplace Plugin",
   "types": "./types/index.d.ts",
   "cordova": {
-    "id": "cordova-plugin-template",
+    "id": "cordova-plugin-marketplace",
     "platforms": [
       "android",
       "ios"
     ]
   },
-  "repository": "bitbucket:genvidtech/cordova-plugin-template",
-  "bugs": "https://bitbucket.org/genvidtech/cordova-plugin-template/issues",
+  "repository": "bitbucket:genvidtech/cordova-plugin-marketplace",
+  "bugs": "https://bitbucket.org/genvidtech/cordova-plugin-marketplace/issues",
   "keywords": [
     "cordova",
     "device",
@@ -25,6 +25,7 @@
     "package": "npm pack && (cd tests && npm pack --pack-destination ..)",
     "clean:demo": "git clean -fxd ./demo",
     "setup:demo:cordova": "cd demo && npm init --workspaces=false -y && npm --prefix . install -D cordova",
+    "setup:demo:config": "shx sed \"s/DEVELOPMENT_TEAM/${APPLE_DEVELOPMENT_TEAM}/\" ios-build.json > demo/build.json",
     "setup:demo": "npm run setup:demo:cordova && npm run setup:demo:config",
     "setup:demo:android": "cd demo && npx --prefix . cordova platform add android",
     "build:demo:android": "cd demo && npx --prefix . cordova build android",
@@ -38,7 +39,7 @@
     "refresh:android": "npm run refresh:common && npm run setup:demo:android && npm run build:demo:android",
     "refresh:ios": "npm run refresh:common && npm run setup:demo:ios && npm run build:demo:ios",
     "restart:android": "npm run refresh:common && npm run setup:demo:android && npm run run:android",
-    "restart:ios": "npm run refresh:common && npm run setup:demo:ios && npm run run:ios",
+    "restart:ios": "npm run refresh:common && npm run setup:demo:ios && npm run run:ios"
   },
   "author": "Genvid Technologies, LLC",
   "license": "MIT-0",

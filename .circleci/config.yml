@@ -19,12 +19,12 @@ parameters:
     type: string
   plugin_name:
     type: string
-    default: cordova-plugin-template
+    default: cordova-plugin-marketplace
   # TODO: Extract from package.
   # Hard because used as parameters in many calls.
   plugin_version:
     type: string
-    default: "0.0.1"
+    default: "1.0.0"
   node_version:
     type: string
     default: "22.14"
@@ -213,7 +213,7 @@ jobs:
           name: Package test app
           command: |
             mkdir Payload
-            mv "demo/platforms/ios/build/Release-iphonesimulator/Genvid Cordova Template Demo.app" Payload
+            mv "demo/platforms/ios/build/Release-iphonesimulator/Genvid Cordova Marketplace Demo.app" Payload
             zip -9r << pipeline.parameters.plugin_name >>-tests-<< pipeline.parameters.plugin_version >>.ipa Payload
       - store_artifacts:
           path: << pipeline.parameters.plugin_name >>-tests-<< pipeline.parameters.plugin_version >>.ipa

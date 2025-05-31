@@ -17,14 +17,36 @@
  under the License.
  */
 
-#import <UIKit/UIKit.h>
-#import <Cordova/CDVPlugin.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#include "TargetConditionals.h"
+#import <os/log.h>
 
-API_AVAILABLE(ios(12.0))
-@interface Template : CDVPlugin<ASWebAuthenticationPresentationContextProviding>
-{}
+#import <Availability.h>
 
-// SDK commands
-- (void)getVersion:(CDVInvokedUrlCommand*)command;
+#import <Cordova/CDV.h>
+#import "Marketplace.h"
+
+@interface Marketplace () {}
+@end
+
+@implementation Marketplace
+
+bool _isInitialized;
+
+- (void) pluginInitialize {
+    _isInitialized = false;
+}
+
+// API commands
+
+
+- (void)getInfo:(CDVInvokedUrlCommand*)command
+{
+    NSDictionary* version = @{@"version": @"0.0.1"};
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:version];
+        
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
 
 @end

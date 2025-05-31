@@ -21,14 +21,14 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:rim="http://www.blackberry.com/ns/widgets"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="cordova-plugin-template-tests"
-  version="0.0.1">
-  <name>Cordova Template Plugin Tests</name>
+  id="cordova-plugin-marketplace-tests"
+  version="1.0.0">
+  <name>Cordova Marketplace Plugin Tests</name>
   <license>MIT-0</license>
 
   <js-module src="tests.js" name="tests"></js-module>
   <js-module src="ui.js" name="ui"></js-module>
   <js-module src="autoTests.js" name="autoTests"></js-module>
   <js-module src="manualTests.js" name="manualTests"></js-module>
-  <js-module src="testSdkApi.js" name="testSdkApi"></js-module>
+  <js-module src="testApi.js" name="testApi"></js-module>
 </plugin>

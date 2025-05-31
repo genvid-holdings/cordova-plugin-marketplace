@@ -21,24 +21,48 @@
 
 const argscheck = require('cordova/argscheck');
 const exec = require('cordova/exec');
-const { rejectAsError, EOSError } = require('./error');
+const channel = require('cordova/channel');
+
+channel.createSticky('onCordovaInfoReady');
+// Tell cordova channel to wait on the CordovaInfoReady event
+channel.waitForInitialization('onCordovaInfoReady');
 
 /**
  * @constructor
  */
-function Template() {
-    this.SERVICE_NAME = 'Template';
-    this.available = true;
-    this.initialized = false;
+function Marketplace() {
+    this.SERVICE = 'Marketplace';
+    this.available = false;
+    this.name = null;
+    this.info = null;
+
+    var me = this;
+
+    channel.onCordovaReady.subscribe(function () {
+        me.getInfo(
+            function (info) {
+                me.available = true;
+                me.name = info.name;
+                me.info = info;
+                channel.onCordovaInfoReady.fire();
+            },
+            function (e) {
+                me.available = false;
+                console.error('[ERROR] Error initializing cordova-plugin-marketplace: ' + e);
+            }
+        );
+    });
 }
 
-Template.prototype.EOSError = EOSError;
-
-Template.prototype.getVersion = function () {
-    argscheck.checkArgs('', 'plugins.Template.getVersion', arguments);
-    return new Promise((resolve, reject) => {
-        exec((r) => { resolve(r.version); }, rejectAsError(reject), this.SERVICE_NAME, 'getVersion', []);
-    });
+/**
+ * Get marketplace info
+ *
+ * @param {Function} successCallback The function to call when the heading data is available
+ * @param {Function} errorCallback The function to call when there is an error getting the heading data. (OPTIONAL)
+ */
+Marketplace.prototype.getInfo = function (successCallback, errorCallback) {
+    argscheck.checkArgs('fF', 'Marketplace.getInfo', arguments);
+    exec(successCallback, errorCallback, this.SERVICE, 'getInfo', []);
 };
 
-module.exports = new Template();
+module.exports = new Marketplace();

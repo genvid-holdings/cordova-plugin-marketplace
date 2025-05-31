@@ -16,7 +16,7 @@
        specific language governing permissions and limitations
        under the License.
 */
-package com.genvidtech.cordova.eos;
+package com.genvidtech.cordova.marketplace;
 
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
@@ -33,24 +33,20 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.pm.InstallSourceInfo;
 
 import java.lang.Runnable;
 
-public class Template extends CordovaPlugin {
+public class Marketplace extends CordovaPlugin {
 
-    private static final String LogTag = "Template";
+    private static final String LogTag = "Marketplace";
 
     /**
      * Constructor.
      */
-    public Template() {}
-
-    public boolean Initialize() throws JSONException {
-
-        Activity activity = this.cordova.getActivity();
-
-        return true;
-    }
+    public Marketplace() {}
 
     @Override
     public void onDestroy() {
@@ -67,20 +63,35 @@ public class Template extends CordovaPlugin {
         super.onResume(multitasking);
     }
 
-    // All calls to EOS need to be made in the UI thread.
-    // 
     private void runOnUiThread(Runnable r) {
         cordova.getActivity().runOnUiThread(r);
     }
 
-    private boolean handleGetVersion(CallbackContext callbackContext) {        
+    private boolean handleGetInfo(CallbackContext callbackContext) { 
+        Context context = cordova.getContext();
+        String packageName = context.getPackageName();
+        PackageManager packageManager = context.getPackageManager();
         try {
+            InstallSourceInfo source = packageManager.getInstallSourceInfo(packageName);
+            String initiatingPackageName = source.getInitiatingPackageName();
+            // TODO: Add SigningInfo.
+            String installingPackageName = source.getInstallingPackageName();
+            String originatingPackageName = source.getOriginatingPackageName();
+            String updateOwnerPackageName = source.getUpdateOwnerPackageName();
             JSONObject resp = new JSONObject();
-            resp.put("version", "0.0.1");
+            resp.put("name", initiatingPackageName); // Common to all platform
+            // Android specifics
+            resp.put("originatingPackage", originatingPackageName);
+            resp.put("installingPackage", installingPackageName);
+            resp.put("initiatingPackage", initiatingPackageName);
+            resp.put("updateOwnerPackage", updateOwnerPackageName);
             callbackContext.success(resp);
-        } catch(JSONException err) {
-            callbackContext.error("Exception writing response: " + err.getMessage());
+        } catch(PackageManager.NameNotFoundException err) {
+            callbackContext.error("Can't find package " + packageName + ": " + err.getMessage());
+        } catch (JSONException err) {
+            callbackContext.error("Error writing response: " + err.getMessage());
         }
+        
         return true;
     }
 
@@ -95,8 +106,8 @@ public class Template extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         switch (action) {
             // sdk interface
-            case "getVersion":
-                return handleGetVersion(callbackContext);
+            case "getInfo":
+                return handleGetInfo(callbackContext);
             default:
                 return false;
         }
@@ -105,9 +116,5 @@ public class Template extends CordovaPlugin {
     //--------------------------------------------------------------------------
     // LOCAL METHODS
     //--------------------------------------------------------------------------
-
-    /**
-     * This will maintain calling itself every 10th of a second after the initial trigger
-     */
 
 }

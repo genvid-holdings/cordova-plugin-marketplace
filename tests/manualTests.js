@@ -1,9 +1,9 @@
 const testApi = require('./testApi');
 
 const manualTests = function (contentEl, createActionButton) {
-    const orderedTabs = ['api',];
+    const orderedTabs = ['api'];
     const modules = {
-        api: testApi,
+        api: testApi
     };
     const tabsHTML = orderedTabs.map(tab => {
         return `

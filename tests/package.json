@@ -1,9 +1,9 @@
 {
-  "name": "cordova-plugin-template-tests",
-  "version": "0.0.1",
+  "name": "cordova-plugin-marketplace-tests",
+  "version": "1.0.0",
   "description": "",
   "cordova": {
-    "id": "cordova-plugin-template-tests",
+    "id": "cordova-plugin-marketplace-tests",
     "platforms": [ ]
   },
   "keywords": [

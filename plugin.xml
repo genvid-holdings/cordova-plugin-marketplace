@@ -21,52 +21,45 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:rim="http://www.blackberry.com/ns/widgets"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    id="cordova-plugin-template"
-    version="0.0.1">
-    <name>template</name>
-    <description>Cordova Template Plugin</description>
+    id="cordova-plugin-marketplace"
+    version="1.0.0">
+    <name>marketplace</name>
+    <description>Cordova Marketplace Plugin</description>
     <license>MIT-0</license>
-    <keywords>cordova,eos</keywords>
-    <repo>https://bitbucket.org/genvidtech/cordova-plugin-template</repo>
-    <issue>https://bitbucket.org/genvidtech/cordova-plugin-template/issues</issue>
+    <keywords>cordova</keywords>
+    <repo>https://bitbucket.org/genvidtech/cordova-plugin-marketplace</repo>
+    <issue>https://bitbucket.org/genvidtech/cordova-plugin-marketplace/issues</issue>
 
     <engines>
         <engine name="cordova-android" version=">=7.0.0" />
     </engines>
 
-    <js-module src="www/index.js" name="template">
-        <clobbers target="window.plugins.template" />
+    <js-module src="www/index.js" name="Marketplace">
+        <clobbers target="window.plugins.marketplace" />
     </js-module>
-    <js-module src="www/error.js" name="error" />
 
     <!-- android -->
     <platform name="android">
 
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="Template">
-                <param name="android-package" value="com.genvidtech.cordova.template.Template" />
+            <feature name="Marketplace">
+                <param name="android-package" value="com.genvidtech.cordova.marketplace.Marketplace" />
             </feature>
         </config-file>
 
-        <source-file src="src/android/Template.java"
-            target-dir="src/com/genvidtech/cordova/template/" />
-        <source-file src="src/android/cpp/Template.cpp"
-            target-dir="cpp/Template/" />
-        <source-file src="src/android/cpp/CMakeLists.txt"
-            target-dir="cpp/Template/" />
-
-        <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
+        <source-file src="src/android/Marketplace.java"
+            target-dir="src/com/genvidtech/cordova/marketplace/" />
     </platform>
 
     <!-- ios -->
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
-            <feature name="Template">
-                <param name="ios-package" value="Template" />
+            <feature name="Marketplace">
+                <param name="ios-package" value="Marketplace" />
             </feature>
         </config-file>
-        <header-file src="src/ios/Template.h" />
-        <source-file src="src/ios/Template.mm" />
+        <header-file src="src/ios/Marketplace.h" />
+        <source-file src="src/ios/Marketplace.mm" />
     </platform>
 
 </plugin>

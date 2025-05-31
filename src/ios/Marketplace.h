@@ -17,36 +17,13 @@
  under the License.
  */
 
-#include <sys/types.h>
-#include <sys/sysctl.h>
-#include "TargetConditionals.h"
-#import <os/log.h>
+#import <UIKit/UIKit.h>
+#import <Cordova/CDVPlugin.h>
 
-#import <Availability.h>
-
-#import <Cordova/CDV.h>
-#import "Template.h"
-
-@interface Template () {}
-@end
-
-@implementation Template
-
-bool _isInitialized;
-
-- (void) pluginInitialize {
-    _isInitialized = false;
-}
+@interface Marketplace : CDVPlugin
+{}
 
 // API commands
-
-
-- (void)getVersion:(CDVInvokedUrlCommand*)command
-{
-    NSDictionary* version = @{@"version": @"0.0.1"};
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:version];
-        
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
+- (void)getInfo:(CDVInvokedUrlCommand*)command;
 
 @end
