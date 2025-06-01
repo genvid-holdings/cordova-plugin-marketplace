@@ -23,14 +23,14 @@ const argscheck = require('cordova/argscheck');
 const exec = require('cordova/exec');
 const channel = require('cordova/channel');
 
-channel.createSticky('onCordovaInfoReady');
-// Tell cordova channel to wait on the CordovaInfoReady event
-channel.waitForInitialization('onCordovaInfoReady');
+channel.createSticky('onMarketplaceReady');
+// Tell cordova channel to wait on the MarketplaceReady event
+channel.waitForInitialization('onMarketplaceReady');
 
 /**
  * @constructor
  */
-function Marketplace() {
+function Marketplace () {
     this.SERVICE = 'Marketplace';
     this.available = false;
     this.name = null;
@@ -44,11 +44,12 @@ function Marketplace() {
                 me.available = true;
                 me.name = info.name;
                 me.info = info;
-                channel.onCordovaInfoReady.fire();
+                channel.onMarketplaceReady.fire();
             },
             function (e) {
                 me.available = false;
                 console.error('[ERROR] Error initializing cordova-plugin-marketplace: ' + e);
+                channel.onMarketplaceReady.fire();
             }
         );
     });

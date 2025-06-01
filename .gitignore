@@ -4,3 +4,4 @@ node_modules/
 *.cer
 *.p12
 *.log
+demo/build.json

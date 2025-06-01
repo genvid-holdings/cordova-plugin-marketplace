@@ -1,5 +1,5 @@
 {
     "circleci.persistedProjectSelection": [
-        "bb/genvidtech/cordova-plugin-template"
+        "bb/genvidtech/cordova-plugin-marketplace"
     ]
 }

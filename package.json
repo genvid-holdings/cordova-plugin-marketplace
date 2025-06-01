@@ -39,7 +39,8 @@
     "refresh:android": "npm run refresh:common && npm run setup:demo:android && npm run build:demo:android",
     "refresh:ios": "npm run refresh:common && npm run setup:demo:ios && npm run build:demo:ios",
     "restart:android": "npm run refresh:common && npm run setup:demo:android && npm run run:android",
-    "restart:ios": "npm run refresh:common && npm run setup:demo:ios && npm run run:ios"
+    "restart:ios": "npm run refresh:common && npm run setup:demo:ios && npm run run:ios",
+    "open:ios": "open 'demo/platforms/ios/Genvid Cordova Marketplace Demo.xcworkspace'"
   },
   "author": "Genvid Technologies, LLC",
   "license": "MIT-0",

@@ -53,13 +53,15 @@
 
     <!-- ios -->
     <platform name="ios">
+        <engine name="apple-ios" version=">=17.4"/>
         <config-file target="config.xml" parent="/*">
             <feature name="Marketplace">
                 <param name="ios-package" value="Marketplace" />
             </feature>
         </config-file>
-        <header-file src="src/ios/Marketplace.h" />
-        <source-file src="src/ios/Marketplace.mm" />
+        <source-file src="src/ios/Marketplace.swift" />
+        <framework src="MarketplaceKit.framework" />
+        <dependency id="cordova-plugin-add-swift-support" />
     </platform>
 
 </plugin>
