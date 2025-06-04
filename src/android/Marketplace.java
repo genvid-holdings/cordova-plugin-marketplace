@@ -32,12 +32,15 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Build;
 import android.util.Log;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.InstallSourceInfo;
 
 import java.lang.Runnable;
+import java.util.concurrent.Callable;
+import java.lang.Throwable;
 
 public class Marketplace extends CordovaPlugin {
 
@@ -67,29 +70,48 @@ public class Marketplace extends CordovaPlugin {
         cordova.getActivity().runOnUiThread(r);
     }
 
+    private String getSafeName(Callable<String> callable) {
+        try {
+            return callable.call();
+        } catch(Throwable err) {
+            Log.w(LogTag, "Error getting package name", err);
+            return null;
+        }
+    }
+
     private boolean handleGetInfo(CallbackContext callbackContext) { 
         Context context = cordova.getContext();
         String packageName = context.getPackageName();
-        PackageManager packageManager = context.getPackageManager();
         try {
-            InstallSourceInfo source = packageManager.getInstallSourceInfo(packageName);
-            String initiatingPackageName = source.getInitiatingPackageName();
-            // TODO: Add SigningInfo.
-            String installingPackageName = source.getInstallingPackageName();
-            String originatingPackageName = source.getOriginatingPackageName();
-            String updateOwnerPackageName = source.getUpdateOwnerPackageName();
+            PackageManager packageManager = context.getPackageManager();
             JSONObject resp = new JSONObject();
-            resp.put("name", initiatingPackageName); // Common to all platform
-            // Android specifics
-            resp.put("originatingPackage", originatingPackageName);
-            resp.put("installingPackage", installingPackageName);
-            resp.put("initiatingPackage", initiatingPackageName);
-            resp.put("updateOwnerPackage", updateOwnerPackageName);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // API Level 30
+                InstallSourceInfo source = packageManager.getInstallSourceInfo(packageName);
+                String initiatingPackageName = source.getInitiatingPackageName();
+                // TODO: Add SigningInfo.
+                String installingPackageName = getSafeName(() -> { return source.getInstallingPackageName(); });
+                String originatingPackageName = getSafeName(() -> { return source.getOriginatingPackageName(); });
+                resp.put("name", initiatingPackageName); // Common to all platform
+                // Android specifics
+                resp.put("originatingPackage", originatingPackageName);
+                resp.put("installingPackage", installingPackageName);
+                resp.put("initiatingPackage", initiatingPackageName);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    String updateOwnerPackageName = getSafeName(() -> { return source.getUpdateOwnerPackageName(); });
+                    resp.put("updateOwnerPackage", updateOwnerPackageName);
+                }
+            } else {
+                String installerPackageName = packageManager.getInstallerPackageName(packageName);
+                resp.put("name", installerPackageName);
+                resp.put("installerPackage", installerPackageName);
+            }
             callbackContext.success(resp);
         } catch(PackageManager.NameNotFoundException err) {
             callbackContext.error("Can't find package " + packageName + ": " + err.getMessage());
         } catch (JSONException err) {
             callbackContext.error("Error writing response: " + err.getMessage());
+        } catch (Throwable err) {
+            callbackContext.error("Unknown error: " + err.getMessage());
         }
         
         return true;
