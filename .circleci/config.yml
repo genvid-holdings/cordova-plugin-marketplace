@@ -21,10 +21,9 @@ parameters:
     type: string
     default: cordova-plugin-marketplace
   # TODO: Extract from package.
-  # Hard because used as parameters in many calls.
   plugin_version:
     type: string
-    default: "1.0.0"
+    default: "1.0.1"
   node_version:
     type: string
     default: "22.14"

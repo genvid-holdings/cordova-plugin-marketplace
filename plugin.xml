@@ -22,7 +22,7 @@
     xmlns:rim="http://www.blackberry.com/ns/widgets"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="cordova-plugin-marketplace"
-    version="1.0.0">
+    version="1.0.1">
     <name>marketplace</name>
     <description>Cordova Marketplace Plugin</description>
     <license>MIT-0</license>
@@ -53,7 +53,7 @@
 
     <!-- ios -->
     <platform name="ios">
-        <engine name="apple-ios" version=">=17.4"/>
+        <engine name="apple-ios" version=">=17.4" />
         <config-file target="config.xml" parent="/*">
             <feature name="Marketplace">
                 <param name="ios-package" value="Marketplace" />
@@ -61,7 +61,8 @@
         </config-file>
         <source-file src="src/ios/Marketplace.swift" />
         <framework src="MarketplaceKit.framework" />
-        <dependency id="cordova-plugin-add-swift-support" />
+        <!-- Seems no longer necessary (and broken) -->
+        <!-- dependency id="cordova-plugin-add-swift-support" / -->
     </platform>
 
 </plugin>
