@@ -1,4 +1,17 @@
-# Cordova Epic Online Services Plugin
+# Cordova Marketplace Plugin
+
+Reports how the app was installed / which app marketplace it came from. Exposes
+`window.plugins.marketplace` with a single action, `getInfo`.
+
+## Installation
+
+```bash
+cordova plugin add @genvid/cordova-plugin-marketplace
+```
+
+The plugin is published publicly to npm under the
+[`@genvid`](https://www.npmjs.com/package/@genvid/cordova-plugin-marketplace)
+scope.
 
 ## Development
 
@@ -21,15 +34,28 @@ npm run lint
 npm run package
 ```
 
-This will create two package:
+This will create two packages:
 
-* `cordova-plugin-template-<version>.tgz` for the plugin
-* `cordova-plugin-template-tests-<version>.tgz` for the tests
+* `genvid-cordova-plugin-marketplace-<version>.tgz` for the plugin
+* `cordova-plugin-marketplace-tests-<version>.tgz` for the tests
 
 #### Notice
 
 Please, maintain the `.npmignore` consistently to avoid
 distributing unnecessary files in the packages.
+
+### Releasing
+
+Releases are published to npm automatically by GitHub Actions using OIDC
+trusted publishing — no npm token is stored anywhere. Pushing a `vX.Y.Z` tag
+that matches `package.json`'s `version` triggers
+[`.github/workflows/publish.yml`](.github/workflows/publish.yml), which runs the
+shared validation gate and then `npm publish --provenance`. `ci.yml` runs the
+same gate (lint / typecheck / test / build) on every pull request and push to
+`main`.
+
+> The CircleCI `android`/`ios` jobs only build the on-device demo as a smoke
+> test; they no longer package or publish the plugin.
 
 ### How to build and run the test demo
 

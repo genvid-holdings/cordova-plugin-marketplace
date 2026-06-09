@@ -5,13 +5,14 @@
     "languages": ["javascript", "java", "swift"]
   },
   "commands": {
-    "test": "",
+    "test": "npm run test",
     "lint": "npm run lint",
-    "build": "npm run package",
-    "validate": "npm run lint"
+    "typecheck": "npm run typecheck",
+    "build": "npm run build",
+    "validate": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "repo": {
-    "host": "bitbucket",
+    "host": "github",
     "default_branch": "main"
   },
   "features": {},
