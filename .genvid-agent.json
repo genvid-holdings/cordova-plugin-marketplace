@@ -1,0 +1,19 @@
+{
+  "project": {
+    "name": "cordova-plugin-marketplace",
+    "description": "Cordova plugin reporting the app's install source / marketplace (Android PackageManager, iOS MarketplaceKit).",
+    "languages": ["javascript", "java", "swift"]
+  },
+  "commands": {
+    "test": "",
+    "lint": "npm run lint",
+    "build": "npm run package",
+    "validate": "npm run lint"
+  },
+  "repo": {
+    "host": "bitbucket",
+    "default_branch": "main"
+  },
+  "features": {},
+  "paths": {}
+}
