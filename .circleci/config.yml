@@ -3,7 +3,6 @@ version: 2.1
 orbs:
   onepassword: onepassword/secrets@1.0.0
   # slack: circleci/slack@4.13.3
-  azure-cli: circleci/azure-cli@1.2.2
   node: circleci/node@7.1.0
 
 parameters:
@@ -23,7 +22,7 @@ parameters:
   # TODO: Extract from package.
   plugin_version:
     type: string
-    default: "1.0.1"
+    default: "1.1.0"
   node_version:
     type: string
     default: "22.14"
@@ -32,16 +31,6 @@ parameters:
     default: "2.29.0"
 
 commands:
-  az-login:
-    steps:
-      - run:
-          name: Login to Azure
-          command: |
-            az login \
-              --service-principal \
-              --username=${AZURE_SP_APPID} \
-              --tenant=${AZURE_SP_TENANT} \
-              --password=${AZURE_SP_PASSWORD}
   ios-import-certs:
     steps:
       - run:
@@ -64,65 +53,12 @@ commands:
             security default-keychain -s ~/Library/Keychains/ios-build.keychain
             security unlock-keychain -p 'tempPassword' ~/Library/Keychains/ios-build.keychain
 
+# NOTE: Plugin packaging and npm publishing have moved to GitHub Actions
+# (.github/workflows/ci.yml + publish.yml, OIDC trusted publishing). CircleCI
+# now only runs the on-device build smoke tests below, which pack the plugin
+# locally (npm run package) instead of pulling it from a shared workspace.
+
 jobs:
-  packages:
-    parameters:
-      onepassword-env:
-        type: string
-        default: '/tmp/op.env'
-    docker:
-      - image: cimg/node:<< pipeline.parameters.node_version >>
-    shell: op run --env-file="<< parameters.onepassword-env >>" -- /bin/bash -eo pipefail
-    steps:
-      - onepassword/install-cli:
-          shell: /bin/bash -eo pipefail
-          version: << pipeline.parameters.onepassword_version >>
-      - run:
-          shell: /bin/bash -eo pipefail
-          name: Setup secret environment and read from OnePassword
-          command: |
-            echo "Reading OnePassword environment file..."
-            op read "op://${BURBANK_ENV_FILE}" -o << parameters.onepassword-env >>
-      - checkout
-      - azure-cli/install
-      - az-login
-      - node/install-packages:
-          # Override to use cache
-          override-ci-command: npm install
-      - run:
-          name: Lint
-          command: npm run lint
-      - run:
-          name: Package
-          command: |
-            npm run package
-            mkdir packages
-            mv *.tgz packages
-      - persist_to_workspace:
-          root: packages
-          paths:
-            - '*.tgz'
-      - store_artifacts:
-          path: packages
-      - run:
-          name: Upload to Azure
-          command: |
-            TAG=<< pipeline.git.tag >>
-            BRANCH=<< pipeline.git.branch >>
-            if [ -z "${TAG}" ]; then
-              export SLUG=branch/${BRANCH}
-            else
-              export SLUG=tags/${TAG}
-            fi
-
-            for file in `ls packages/*.tgz` ; do
-              az storage blob upload \
-                --overwrite \
-                -c 'cordova' \
-                -n "<< pipeline.parameters.plugin_name >>/${SLUG}/$(basename ${file})" \
-                --file "${file}"
-            done
-
   android:
     docker:
       - image: cimg/android:2025.03-node
@@ -141,18 +77,14 @@ jobs:
             echo "Reading OnePassword environment file..."
             op read "op://${BURBANK_ENV_FILE}" -o << parameters.onepassword-env >>
       - checkout
-      - azure-cli/install
-      - az-login
       - node/install:
           node-version: << pipeline.parameters.node_version >>
       - node/install-packages:
           # Override to use cache
           override-ci-command: npm install
-      - attach_workspace:
-          at: packages
       - run:
-          name: Copy packages
-          command: cp packages/*.tgz .
+          name: Package plugin and tests
+          command: npm run package
       - run:
           name: Create test app
           command: |
@@ -182,26 +114,15 @@ jobs:
             echo "Reading OnePassword environment file..."
             op read "op://${BURBANK_ENV_FILE}" -o << parameters.onepassword-env >>
       - checkout
-      - run:
-          name: Install Azure CLI using Homebrew
-          environment:
-            HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
-          command: |
-            # BUR-4292: latest (2024-10-18) brew install azure-cli doesn't work.
-            curl -o /tmp/azure-cli.rb https://raw.githubusercontent.com/Homebrew/homebrew-core/cae5fb68898fa52ba24ae573552162a1b9f83b74/Formula/a/azure-cli.rb
-            brew install --formula /tmp/azure-cli.rb
-      - az-login
       - node/install:
           node-version: << pipeline.parameters.node_version >>
       - node/install-packages:
           # Override to use cache
           override-ci-command: npm install
-      - attach_workspace:
-          at: packages
-      - run:
-          name: Copy packages
-          command: cp packages/*.tgz .
       - ios-import-certs
+      - run:
+          name: Package plugin and tests
+          command: npm run package
       - run:
           name: Create test app
           command: |
@@ -220,28 +141,17 @@ jobs:
 workflows:
   default:
     jobs:
-      - packages:
-          filters:
-            tags:
-              # Only tags starting with at least one or more digits followed by a dot
-              only: /\d+\..*/
-          context:
-            - burbank-onepassword
       - android:
           filters:
             tags:
-              # Only tags starting with at least one or more digits followed by a dot
-              only: /\d+\..*/
-          requires:
-            - packages
+              # Only tags starting with "v" followed by one or more digits and a dot
+              only: /v\d+\..*/
           context:
             - burbank-onepassword
       - ios:
           filters:
             tags:
-              # Only tags starting with at least one or more digits followed by a dot
-              only: /\d+\..*/
-          requires:
-            - packages
+              # Only tags starting with "v" followed by one or more digits and a dot
+              only: /v\d+\..*/
           context:
             - burbank-onepassword
