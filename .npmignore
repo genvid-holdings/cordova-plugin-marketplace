@@ -7,3 +7,10 @@
 *.tgz
 *.cer
 *.p12
+*.log
+
+# Development/planning artifacts — not for npm consumers
+/CLAUDE.md
+/CONVENTIONS.md
+/docs/
+/plan.md

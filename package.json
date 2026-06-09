@@ -1,17 +1,23 @@
 {
-  "name": "cordova-plugin-marketplace",
-  "version": "1.0.1",
+  "name": "@genvid/cordova-plugin-marketplace",
+  "version": "1.1.0",
   "description": "Cordova Marketplace Plugin",
   "types": "./types/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "cordova": {
-    "id": "cordova-plugin-marketplace",
+    "id": "@genvid/cordova-plugin-marketplace",
     "platforms": [
       "android",
       "ios"
     ]
   },
-  "repository": "bitbucket:genvidtech/cordova-plugin-marketplace",
-  "bugs": "https://bitbucket.org/genvidtech/cordova-plugin-marketplace/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/genvid-holdings/cordova-plugin-marketplace.git"
+  },
+  "bugs": "https://github.com/genvid-holdings/cordova-plugin-marketplace/issues",
   "keywords": [
     "cordova",
     "device",
