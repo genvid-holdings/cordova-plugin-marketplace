@@ -61,6 +61,7 @@ The gate scripts `npm run typecheck` (`tsc --noEmit` over `types/index.d.ts`), `
 
 ## Conventions / gotchas
 
+- Published as **`@genvid/cordova-plugin-marketplace`** (scoped) because the unscoped npm name `cordova-plugin-marketplace` is taken by an unrelated package.
 - Keep **`.npmignore`** accurate — it controls what ships in the published `.tgz`. The README calls this out explicitly.
 - Source files carry the Apache-2.0 license header (the plugin itself is **MIT-0**); preserve headers when editing.
 - This plugin was forked from an internal **EOS (Epic Online Services)** plugin. Leftover `eos` references remain in the README, the demo app id (`com.genvidtech.eosdemo`), and a test heading ("EOS Tests"). These are stale naming, not separate functionality.
