@@ -1,17 +1,23 @@
 {
-  "name": "cordova-plugin-marketplace",
-  "version": "1.0.1",
+  "name": "@genvid/cordova-plugin-marketplace",
+  "version": "1.1.0",
   "description": "Cordova Marketplace Plugin",
   "types": "./types/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "cordova": {
-    "id": "cordova-plugin-marketplace",
+    "id": "@genvid/cordova-plugin-marketplace",
     "platforms": [
       "android",
       "ios"
     ]
   },
-  "repository": "bitbucket:genvidtech/cordova-plugin-marketplace",
-  "bugs": "https://bitbucket.org/genvidtech/cordova-plugin-marketplace/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/genvid-holdings/cordova-plugin-marketplace.git"
+  },
+  "bugs": "https://github.com/genvid-holdings/cordova-plugin-marketplace/issues",
   "keywords": [
     "cordova",
     "device",
@@ -22,6 +28,9 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"no host-side unit tests (Cordova specs run on-device)\"",
+    "build": "echo \"no build step (Cordova plugin ships sources as-is)\"",
     "package": "npm pack && (cd tests && npm pack --pack-destination ..)",
     "clean:demo": "git clean -fxd ./demo",
     "setup:demo:cordova": "cd demo && npm init --workspaces=false -y && npm --prefix . install -D cordova",
@@ -57,6 +66,7 @@
   "devDependencies": {
     "@cordova/eslint-config": "^3.0.0",
     "eslint-plugin-promise": "^7.2.1",
-    "shx": "^0.4.0"
+    "shx": "^0.4.0",
+    "typescript": "^5.9.2"
   }
 }

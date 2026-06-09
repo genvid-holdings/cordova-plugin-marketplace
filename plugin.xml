@@ -21,14 +21,14 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:rim="http://www.blackberry.com/ns/widgets"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    id="cordova-plugin-marketplace"
-    version="1.0.1">
+    id="@genvid/cordova-plugin-marketplace"
+    version="1.1.0">
     <name>marketplace</name>
     <description>Cordova Marketplace Plugin</description>
     <license>MIT-0</license>
     <keywords>cordova</keywords>
-    <repo>https://bitbucket.org/genvidtech/cordova-plugin-marketplace</repo>
-    <issue>https://bitbucket.org/genvidtech/cordova-plugin-marketplace/issues</issue>
+    <repo>https://github.com/genvid-holdings/cordova-plugin-marketplace</repo>
+    <issue>https://github.com/genvid-holdings/cordova-plugin-marketplace/issues</issue>
 
     <engines>
         <engine name="cordova-android" version=">=7.0.0" />

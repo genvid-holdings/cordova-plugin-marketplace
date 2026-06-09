@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this plugin does
 
-`cordova-plugin-marketplace` is a small Cordova plugin that reports **how the app was installed / which app marketplace it came from**. It exposes a single JS API, `window.plugins.marketplace`, with one native action: `getInfo`.
+`@genvid/cordova-plugin-marketplace` is a small Cordova plugin that reports **how the app was installed / which app marketplace it came from**. It exposes a single JS API, `window.plugins.marketplace`, with one native action: `getInfo`.
 
 - **Android**: install source via `PackageManager` — `getInstallSourceInfo()` on API ≥ 30 (S), falling back to `getInstallerPackageName()` on older devices. Returns the initiating/installing/originating/update-owner package names.
 - **iOS** (17.4+): `MarketplaceKit`'s `AppDistributor.current` — resolves to `AppStore`, `TestFlight`, `web`, `Other`, or an alternative marketplace's identifier.
@@ -23,7 +23,7 @@ Three layers that must stay in sync — adding or changing an action means touch
 
 ## Tests & demo
 
-- **`tests/`** is a separate Cordova test package (`cordova-plugin-marketplace-tests`) using the `cordova-plugin-test-framework` convention: `defineAutoTests` (Jasmine specs in `autoTests.js`) and `defineManualTests` (button-driven UI in `manualTests.js` / `testApi.js`). It is packaged and published as its own `.tgz`.
+- **`tests/`** is a separate Cordova test package (`cordova-plugin-marketplace-tests`) using the `cordova-plugin-test-framework` convention: `defineAutoTests` (Jasmine specs in `autoTests.js`) and `defineManualTests` (button-driven UI in `manualTests.js` / `testApi.js`). It is **not published to npm** — `npm run package` packs it into a local `.tgz` that the demo (and the CircleCI device-build jobs) install via `file://`.
 - **`demo/`** is a Cordova app used as the test harness. It is **generated** by the `setup:demo` scripts (its `platforms/`, `node_modules`, etc. are not real sources) — `npm run clean:demo` wipes it with `git clean -fxd`. Don't hand-edit generated files under `demo/platforms/`.
 
 ## Commands
@@ -47,6 +47,13 @@ npm run run:android                # or run:ios
 
 Full clean rebuild in one shot: `npm run refresh:android` / `refresh:ios` (package → clean demo → setup → build), or `restart:android` / `restart:ios` to also run.
 
+The gate scripts `npm run typecheck` (`tsc --noEmit` over `types/index.d.ts`), `npm run test`, and `npm run build` exist only to satisfy the shared CI gate; `test` and `build` are intentional no-ops (the Jasmine specs are device-only and the plugin ships its sources as-is).
+
+### CI / Publishing
+
+- **GitHub Actions** owns packaging and publishing. `.github/workflows/ci.yml` runs the shared `genvid-public-ci` gate (lint / typecheck / test / build) on PRs and pushes to `main`. `.github/workflows/publish.yml` fires on a `vX.Y.Z` tag and publishes `@genvid/cordova-plugin-marketplace` to npm via **OIDC trusted publishing** (`--provenance`, no stored token). The tag must match `package.json`'s `version`. See the **Releasing** section of the README; use the `release-npm-package` skill to cut a release.
+- **CircleCI** (`.circleci/config.yml`) now only runs the `android` / `ios` on-device demo build smoke tests (tag filter `/v\d+\..*/`), each packing the plugin locally. It no longer packages, publishes, or uploads to Azure.
+
 ### Platform notes
 
 - **iOS** signing: `setup:demo:config` substitutes the `APPLE_DEVELOPMENT_TEAM` env var into `ios-build.json` → `demo/build.json`. That env var must be set, and `xcode` / `ios-deploy` are installed by `setup:demo:ios`.
@@ -54,7 +61,8 @@ Full clean rebuild in one shot: `npm run refresh:android` / `refresh:ios` (packa
 
 ## Conventions / gotchas
 
+- Published as **`@genvid/cordova-plugin-marketplace`** (scoped) because the unscoped npm name `cordova-plugin-marketplace` is taken by an unrelated package.
 - Keep **`.npmignore`** accurate — it controls what ships in the published `.tgz`. The README calls this out explicitly.
 - Source files carry the Apache-2.0 license header (the plugin itself is **MIT-0**); preserve headers when editing.
 - This plugin was forked from an internal **EOS (Epic Online Services)** plugin. Leftover `eos` references remain in the README, the demo app id (`com.genvidtech.eosdemo`), and a test heading ("EOS Tests"). These are stale naming, not separate functionality.
-- Repository is hosted on **Bitbucket** (`genvidtech/cordova-plugin-marketplace`), not GitHub.
+- Repository is hosted on **GitHub** (`genvid-holdings/cordova-plugin-marketplace`), public. (It was previously on Bitbucket; some historical references may linger.)

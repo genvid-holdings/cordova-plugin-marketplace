@@ -1,5 +1,5 @@
 // Type definitions for cordova-plugin-marketplace
-// Project: https://bitbucket.org/genvidtech/cordova-plugin-marketplace
+// Project: https://github.com/genvid-holdings/cordova-plugin-marketplace
 // Definitions by: Microsoft Open Technologies Inc <http://msopentech.com>
 //                 Tim Brust <https://github.com/timbru31>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
