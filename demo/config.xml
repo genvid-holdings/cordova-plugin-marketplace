@@ -15,5 +15,9 @@
     <platform name="ios">
         <preference name="scheme" value="app" />
         <preference name="hostname" value="localhost" />
+        <!-- The plugin's Marketplace.swift uses os.Logger (iOS 14+); the
+             MarketplaceKit path is #available-guarded for 17.4. cordova-ios
+             defaults to a lower target, which fails to compile, so pin >=14. -->
+        <preference name="deployment-target" value="14.0" />
     </platform>
 </widget>
