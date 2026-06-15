@@ -54,31 +54,56 @@ shared validation gate and then `npm publish --provenance`. `ci.yml` runs the
 same gate (lint / typecheck / test / build) on every pull request and push to
 `main`.
 
-> The CircleCI `android`/`ios` jobs only build the on-device demo as a smoke
-> test; they no longer package or publish the plugin.
+### Continuous integration
+
+Native builds run on GitHub Actions (CircleCI has been removed):
+
+* [`android.yml`](.github/workflows/android.yml) and
+  [`ios.yml`](.github/workflows/ios.yml) each run a **smoke** build on every pull
+  request and push to `main` — Android compiles/links on `ubuntu-latest`, iOS
+  builds for the simulator on `macos-15`. These require no secrets.
+* On a `vX.Y.Z` tag or a manual **Run workflow** (`workflow_dispatch`), a
+  **distribute** job builds a signed artifact for sideloading. Android produces a
+  signed `.apk`. The iOS distribute job is wired up but currently **disabled**
+  pending a signing identity (a `.p12` that includes the certificate's private
+  key) — see the note at the top of that job in `ios.yml`.
+
+Signing material is pulled from 1Password at run time via a single repository
+secret, `OP_SERVICE_ACCOUNT_TOKEN` (a service account scoped to the signing
+vault); no certificates or keystores are stored in GitHub.
 
 ### How to build and run the test demo
 
-After having build the packages:
+After having built the packages:
 
 ```bash
-npm run install-sdk:android:windows
 npm run setup:demo
-npm run build:demo:<platform>
+npm run setup:demo:<platform>      # adds the cordova platform (android | ios)
+npm run build:demo:<platform>      # device build (iOS uses --device)
 ```
 
-where `<platform>` is replaced with either `android` or `ios`.
+where `<platform>` is replaced with either `android` or `ios`. The Android SDK
+(and, for iOS, Xcode) must already be installed on your machine.
 
-Then you can run the application:
+Then you can run the application on a connected device/emulator:
 
 ```bash
-npm run run:demo:<platform>
+npm run run:<platform>
+```
+
+To build for the iOS **simulator** (no signing required — this is what CI's smoke
+job runs), use the `:sim` scripts instead:
+
+```bash
+npm run setup:demo:sim
+npm run setup:demo:sim:ios
+npm run build:demo:ios:sim
 ```
 
 To clean everything and rebuild, you can do:
 
 ```bash
-npm run refresh:demo:<platform>
+npm run refresh:<platform>
 ```
 
 ### Manual installation and running for Android
