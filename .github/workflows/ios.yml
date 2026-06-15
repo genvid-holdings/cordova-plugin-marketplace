@@ -92,7 +92,7 @@ jobs:
           op read "op://Project-Burbank/AppStore Development Certificate/${DEVELOPMENT_CERTIFICATE_ID}.p12" -o "$RUNNER_TEMP/dev.p12"
           # Provisioning profile for the demo's bundle id (com.genvidtech.marketplacedemo),
           # stored as a static file attachment in the Employee vault.
-          op read "op://Employee/Cordova Marketplace Demo iOS Profile/Cordova_Marketplace_Demo_Profile.mobileprovision" -o "$RUNNER_TEMP/profile.mobileprovision"
+          op read "op://Project-Burbank/Cordova Marketplace Demo iOS Profile/Cordova_Marketplace_Demo_Profile.mobileprovision" -o "$RUNNER_TEMP/profile.mobileprovision"
           # Intermediate CA: GitHub runners already carry Apple's WWDR cert, so this
           # is best-effort and must not fail the build if the item has no .cer.
           op read "op://Project-Burbank/Developer ID Certification Authority/${DEVELOPER_AUTHORITY_ID}.cer" -o "$RUNNER_TEMP/authority.cer" || echo "authority cert not fetched (optional)"
