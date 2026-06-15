@@ -56,9 +56,23 @@ jobs:
       - name: Build demo for simulator (compile/link smoke)
         run: npm run build:demo:ios:sim
 
+  # DISABLED pending a signing identity. Everything in this job works — 1Password
+  # vault access, profile fetch for com.genvidtech.marketplacedemo, keychain
+  # import, manual build.json, .ipa export — EXCEPT the signing certificate: the
+  # .p12 in 1Password holds only the certificate, not its private key, so
+  # xcodebuild fails with "No signing certificate ... with a private key was
+  # found". (This is also why the old CircleCI job only ever packaged the
+  # unsigned simulator build.)
+  #
+  # To re-enable when iOS device builds are needed:
+  #   1. Store a .p12 that INCLUDES the private key for the certificate listed in
+  #      the "Cordova Marketplace Demo iOS Profile", in the Project-Burbank vault.
+  #   2. Point DEVELOPMENT_CERTIFICATE_ID/_PASSWORD and the .p12 op read at it.
+  #   3. Restore the trigger guard below to:
+  #        github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
   distribute:
     name: Signed .ipa (sideload artifact)
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    if: false  # see note above — needs a signing identity (.p12 with private key)
     runs-on: macos-15
     env:
       OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
