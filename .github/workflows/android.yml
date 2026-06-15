@@ -95,10 +95,13 @@ jobs:
           --alias="$KEYSTORE_ALIAS"
           --password="$KEYSTORE_PASSWORD"
           --packageType=apk
+      - name: Compute artifact label (ref_name may contain '/')
+        id: meta
+        run: echo "label=${GITHUB_REF_NAME//\//-}" >> "$GITHUB_OUTPUT"
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: marketplace-android-${{ github.ref_name }}
+          name: marketplace-android-${{ steps.meta.outputs.label }}
           path: demo/platforms/android/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
           retention-days: 30

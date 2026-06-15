@@ -153,10 +153,13 @@ jobs:
           fi
           echo "IPA_PATH=$IPA" >> "$GITHUB_ENV"
           echo "Found IPA: $IPA"
+      - name: Compute artifact label (ref_name may contain '/')
+        id: meta
+        run: echo "label=${GITHUB_REF_NAME//\//-}" >> "$GITHUB_OUTPUT"
       - name: Upload .ipa artifact
         uses: actions/upload-artifact@v4
         with:
-          name: marketplace-ios-${{ github.ref_name }}
+          name: marketplace-ios-${{ steps.meta.outputs.label }}
           path: ${{ env.IPA_PATH }}
           if-no-files-found: error
           retention-days: 30
