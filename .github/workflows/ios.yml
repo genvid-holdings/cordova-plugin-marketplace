@@ -33,11 +33,14 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-      # Xcode 16.x carries the iOS 17.4+ SDK that MarketplaceKit needs. 16.2 is the
-      # floor; bump or drop this pin if the macos-15 image stops shipping it.
+      # Use the runner's latest stable Xcode: any current Xcode carries the iOS
+      # 17.4+ SDK MarketplaceKit needs, and latest-stable always has a matching
+      # simulator runtime installed. Pinning a specific Xcode (e.g. 16.2) can
+      # select an SDK whose simulator runtime isn't on the image, which fails
+      # asset-catalog compilation with "No simulator runtime version available".
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.2'
+          xcode-version: latest-stable
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
