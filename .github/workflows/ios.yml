@@ -86,13 +86,13 @@ jobs:
           DEVELOPMENT_CERTIFICATE_ID: op://Project-Burbank/AppStore Development Certificate/id
           DEVELOPMENT_CERTIFICATE_PASSWORD: op://Project-Burbank/AppStore Development Certificate/password
           DEVELOPER_AUTHORITY_ID: op://Project-Burbank/Developer ID Certification Authority/id
-          DEVELOPMENT_PROFILE_FILENAME: op://Project-Burbank/iOS Development Profile/filename
-          DEVELOPMENT_PROFILE_NAME: op://Project-Burbank/iOS Development Profile/name
-      - name: Fetch cert + profile files (dynamic filenames)
+      - name: Fetch cert + profile files
         run: |
           set -euo pipefail
           op read "op://Project-Burbank/AppStore Development Certificate/${DEVELOPMENT_CERTIFICATE_ID}.p12" -o "$RUNNER_TEMP/dev.p12"
-          op read "op://Project-Burbank/iOS Development Profile/${DEVELOPMENT_PROFILE_FILENAME}" -o "$RUNNER_TEMP/profile.mobileprovision"
+          # Provisioning profile for the demo's bundle id (com.genvidtech.marketplacedemo),
+          # stored as a static file attachment in the Employee vault.
+          op read "op://Employee/Cordova Marketplace Demo iOS Profile/Cordova_Marketplace_Demo_Profile.mobileprovision" -o "$RUNNER_TEMP/profile.mobileprovision"
           # Intermediate CA: GitHub runners already carry Apple's WWDR cert, so this
           # is best-effort and must not fail the build if the item has no .cer.
           op read "op://Project-Burbank/Developer ID Certification Authority/${DEVELOPER_AUTHORITY_ID}.cer" -o "$RUNNER_TEMP/authority.cer" || echo "authority cert not fetched (optional)"
@@ -118,8 +118,10 @@ jobs:
           cp "$RUNNER_TEMP/profile.mobileprovision" "$PROFILES/"
           security cms -D -i "$RUNNER_TEMP/profile.mobileprovision" -o "$RUNNER_TEMP/profile.plist"
           PP_UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" "$RUNNER_TEMP/profile.plist")
+          PP_NAME=$(/usr/libexec/PlistBuddy -c "Print Name" "$RUNNER_TEMP/profile.plist")
           echo "PP_UUID=$PP_UUID" >> "$GITHUB_ENV"
-          echo "Provisioning profile UUID: $PP_UUID (name: $DEVELOPMENT_PROFILE_NAME)"
+          echo "Provisioning profile: $PP_NAME ($PP_UUID)"
+          echo "Profile app id: $(/usr/libexec/PlistBuddy -c 'Print Entitlements:application-identifier' "$RUNNER_TEMP/profile.plist" 2>/dev/null || echo unknown)"
       - name: Set up demo project + iOS platform
         run: |
           npm run setup:demo:sim
