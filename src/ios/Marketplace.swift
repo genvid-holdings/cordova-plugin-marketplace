@@ -24,7 +24,7 @@ import OSLog
 @objc(Marketplace)
 class Marketplace :CDVPlugin {
 
-    @available(iOS 13.0.0, *)
+    @available(iOS 14.0, *)
     func getMarketplace() async throws -> String {
         let logger = Logger();
         logger.info("detecting marketplace");
@@ -76,7 +76,7 @@ class Marketplace :CDVPlugin {
     @objc(getInfo:)
     func getInfo(command: CDVInvokedUrlCommand)
     {
-        if #available(iOS 13.0.0, *) {
+        if #available(iOS 14.0, *) {
             Task {
                 let logger = Logger();
                 var pluginResult: CDVPluginResult;
